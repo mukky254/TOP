@@ -1,4 +1,4 @@
-// Fast Authentication with Supabase
+// Ultra-Fast Authentication with Supabase
 class FastAuthManager {
     constructor() {
         this.setupAuthForms();
@@ -40,6 +40,15 @@ class FastAuthManager {
                 this.toggleRoleFields(e.target.value);
             });
         }
+
+        // Get started button
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        if (getStartedBtn) {
+            getStartedBtn.addEventListener('click', () => {
+                utils.navigateToPage('auth');
+                this.switchAuthTab('register');
+            });
+        }
     }
 
     async handleLogin() {
@@ -54,12 +63,8 @@ class FastAuthManager {
         try {
             utils.showToast('Signing in...', 'Please wait', 'info');
             
-            const { user, error } = await supabaseManager.signIn(email, password);
-            
-            if (error) throw error;
-
-            utils.showToast('Success', 'Welcome back!', 'success');
-            utils.navigateToPage('dashboard');
+            await supabaseManager.signIn(email, password);
+            // Navigation happens automatically via auth state change
             
         } catch (error) {
             console.error('Login error:', error);
@@ -90,14 +95,16 @@ class FastAuthManager {
         try {
             utils.showToast('Creating account...', 'Please wait', 'info');
             
-            const { user, error } = await supabaseManager.signUp(formData);
+            const { user } = await supabaseManager.signUp(formData);
             
-            if (error) throw error;
-
-            utils.showToast('Success', 'Account created! Please check your email for verification.', 'success');
-            
-            // Switch to login tab
-            this.switchAuthTab('login');
+            if (user) {
+                utils.showToast('Success', 'Account created! You can now sign in.', 'success');
+                this.switchAuthTab('login');
+                
+                // Pre-fill login form
+                document.getElementById('loginEmail').value = formData.email;
+                document.getElementById('loginPassword').value = '';
+            }
             
         } catch (error) {
             console.error('Registration error:', error);
