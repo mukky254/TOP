@@ -1,14 +1,18 @@
-// Utility functions for Ukulima Biashara
+// Enhanced Utils with Fixed API Calls
 class Utils {
     constructor() {
         this.API_BASE = 'https://ukulima-backend-k23d.onrender.com/api';
         this.currentUser = null;
         this.token = localStorage.getItem('token');
+        this.init();
     }
 
-    // API request helper
+    // Enhanced API request helper with better error handling
     async apiCall(endpoint, options = {}) {
         const url = `${this.API_BASE}${endpoint}`;
+        
+        console.log(`🌐 API Call: ${options.method || 'GET'} ${url}`);
+        
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -17,56 +21,317 @@ class Utils {
             ...options
         };
 
+        // Add authorization header if token exists
         if (this.token) {
             config.headers.Authorization = `Bearer ${this.token}`;
         }
 
+        // Remove body for GET requests
+        if ((options.method === 'GET' || !options.method) && options.body) {
+            delete config.body;
+        }
+
+        // Stringify body if it's an object
+        if (config.body && typeof config.body === 'object') {
+            config.body = JSON.stringify(config.body);
+        }
+
         try {
             const response = await fetch(url, config);
-            const data = await response.json();
+            console.log(`📡 Response status: ${response.status}`);
 
-            if (!response.ok) {
-                throw new Error(data.message || 'API request failed');
+            let data;
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                console.warn('Non-JSON response:', text);
+                throw new Error('Server returned non-JSON response');
             }
 
+            if (!response.ok) {
+                console.error('❌ API Error:', data);
+                throw new Error(data.message || `HTTP error! status: ${response.status}`);
+            }
+
+            console.log('✅ API Call successful:', data);
             return data;
+
         } catch (error) {
-            console.error('API Call Error:', error);
-            this.showToast('Error', error.message, 'error');
-            throw error;
+            console.error('💥 API Call failed:', error);
+            
+            let errorMessage = error.message;
+            
+            // Handle network errors
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'Network error: Please check your internet connection';
+            }
+            
+            // Handle CORS errors
+            if (error.message.includes('CORS')) {
+                errorMessage = 'CORS error: Please check backend configuration';
+            }
+
+            this.showToast('API Error', errorMessage, 'error');
+            throw new Error(errorMessage);
         }
     }
 
-    // Show toast notification
-    showToast(title, message, type = 'info') {
-        const toastContainer = document.getElementById('toastContainer');
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        
-        const icon = type === 'success' ? 'check_circle' : 
-                    type === 'error' ? 'error' : 'info';
-        
-        toast.innerHTML = `
-            <span class="material-icons toast-icon">${icon}</span>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-        `;
-
-        toastContainer.appendChild(toast);
-
-        // Show toast
-        setTimeout(() => toast.classList.add('show'), 100);
-
-        // Remove toast after delay
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 5000);
+    // Test backend connection
+    async testBackendConnection() {
+        try {
+            console.log('🔗 Testing backend connection...');
+            const response = await fetch(this.API_BASE.replace('/api', ''));
+            console.log('✅ Backend is reachable');
+            return true;
+        } catch (error) {
+            console.error('❌ Backend connection failed:', error);
+            this.showToast('Connection Error', 'Cannot connect to server. Please try again later.', 'error');
+            return false;
+        }
     }
 
-    // Format currency
+    // Enhanced user data loading
+    async loadUserData() {
+        if (!this.token) {
+            console.log('🔐 No token found, user not logged in');
+            this.currentUser = null;
+            this.updateUI();
+            return;
+        }
+
+        try {
+            console.log('👤 Loading user data...');
+            const userData = await this.apiCall('/auth/me');
+            this.currentUser = userData;
+            this.updateUI();
+            console.log('✅ User data loaded:', userData);
+        } catch (error) {
+            console.error('❌ Failed to load user data:', error);
+            // Clear invalid token
+            this.token = null;
+            this.currentUser = null;
+            localStorage.removeItem('token');
+            this.updateUI();
+        }
+    }
+
+    // Enhanced navigation
+    navigateToPage(page, data = {}) {
+        console.log(`📍 Navigating to: ${page}`, data);
+        
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(p => {
+            p.classList.remove('active');
+        });
+        
+        // Show target page
+        const targetPage = document.getElementById(`${page}Page`);
+        if (targetPage) {
+            targetPage.classList.add('active');
+            
+            // Update URL hash
+            window.location.hash = page;
+            
+            // Update navigation
+            this.updateNavigation(page);
+            
+            // Initialize page-specific content
+            this.initializePage(page, data);
+        } else {
+            console.warn(`Page not found: ${page}`);
+            this.navigateToPage('home');
+        }
+    }
+
+    updateNavigation(activePage) {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('data-page') === activePage) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    initializePage(page, data) {
+        console.log(`🚀 Initializing page: ${page}`);
+        
+        switch (page) {
+            case 'home':
+                if (window.products) {
+                    products.loadFeaturedProducts();
+                }
+                this.updateStats();
+                break;
+                
+            case 'products':
+                if (window.products) {
+                    products.loadProducts(true);
+                }
+                break;
+                
+            case 'dashboard':
+                if (window.dashboard) {
+                    dashboard.loadDashboardData();
+                }
+                break;
+                
+            case 'auth':
+                // Ensure auth forms are properly set up
+                if (window.authManager) {
+                    authManager.populateCounties();
+                }
+                break;
+                
+            case 'orders':
+                if (window.orders && this.isLoggedIn()) {
+                    orders.loadOrders();
+                }
+                break;
+                
+            case 'messages':
+                if (window.messages && this.isLoggedIn()) {
+                    messages.loadConversations();
+                }
+                break;
+        }
+    }
+
+    // Enhanced UI update
+    updateUI() {
+        console.log('🎨 Updating UI based on auth state');
+        
+        const navUser = document.getElementById('navUser');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const authElements = document.querySelectorAll('.auth-required');
+        const guestElements = document.querySelectorAll('.guest-only');
+
+        if (this.isLoggedIn()) {
+            // User is logged in
+            if (navUser) navUser.style.display = 'block';
+            if (addProductBtn && this.isFarmer()) {
+                addProductBtn.style.display = 'block';
+            }
+            
+            // Show/hide elements based on auth
+            authElements.forEach(el => el.style.display = 'block');
+            guestElements.forEach(el => el.style.display = 'none');
+            
+            // Update user info in navigation
+            this.updateUserInfo();
+            
+        } else {
+            // User is not logged in
+            if (navUser) navUser.style.display = 'none';
+            if (addProductBtn) addProductBtn.style.display = 'none';
+            
+            // Show/hide elements based on auth
+            authElements.forEach(el => el.style.display = 'none');
+            guestElements.forEach(el => el.style.display = 'block');
+        }
+    }
+
+    updateUserInfo() {
+        const userInfo = document.getElementById('userInfo');
+        if (userInfo && this.currentUser) {
+            userInfo.innerHTML = `
+                <div class="user-avatar">${this.getUserInitials(this.currentUser.name)}</div>
+                <div class="user-details">
+                    <div class="user-name">${this.currentUser.name}</div>
+                    <div class="user-role">${this.currentUser.role}</div>
+                </div>
+            `;
+        }
+    }
+
+    // Enhanced logout
+    logout() {
+        console.log('🚪 Logging out...');
+        
+        this.token = null;
+        this.currentUser = null;
+        localStorage.removeItem('token');
+        
+        this.showToast('Success', 'Logged out successfully', 'success');
+        this.navigateToPage('home');
+        this.updateUI();
+        
+        // Clear any user-specific data
+        if (window.orders) orders.orders = [];
+        if (window.messages) messages.conversations = [];
+        if (window.cart) cart.clearCart();
+    }
+
+    // Initialize app
+    async init() {
+        console.log('🚀 Initializing Ukulima Biashara...');
+        
+        // Test backend connection
+        await this.testBackendConnection();
+        
+        // Load user data if token exists
+        await this.loadUserData();
+        
+        // Setup event listeners
+        this.setupEventListeners();
+        
+        // Handle initial page load
+        const hash = window.location.hash.substring(1) || 'home';
+        this.navigateToPage(hash);
+        
+        console.log('✅ App initialized successfully');
+    }
+
+    setupEventListeners() {
+        // Navigation
+        document.addEventListener('click', (e) => {
+            const navLink = e.target.closest('.nav-link');
+            if (navLink) {
+                e.preventDefault();
+                const page = navLink.getAttribute('data-page');
+                this.navigateToPage(page);
+            }
+        });
+
+        // Logout
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.logout();
+            });
+        }
+
+        // Mobile menu toggle
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        if (navToggle && navMenu) {
+            navToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+    }
+
+    // Enhanced validation functions
+    validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    validatePhone(phone) {
+        // Kenyan phone number validation
+        const cleaned = phone.replace(/\D/g, '');
+        return cleaned.length >= 9 && cleaned.length <= 12;
+    }
+
+    // Utility functions
+    getUserInitials(name) {
+        if (!name) return '?';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    }
+
     formatCurrency(amount) {
         return new Intl.NumberFormat('en-KE', {
             style: 'currency',
@@ -74,8 +339,8 @@ class Utils {
         }).format(amount);
     }
 
-    // Format date
     formatDate(dateString) {
+        if (!dateString) return 'N/A';
         return new Date(dateString).toLocaleDateString('en-KE', {
             year: 'numeric',
             month: 'short',
@@ -83,8 +348,8 @@ class Utils {
         });
     }
 
-    // Format relative time
     formatRelativeTime(dateString) {
+        if (!dateString) return 'Unknown';
         const date = new Date(dateString);
         const now = new Date();
         const diffInSeconds = Math.floor((now - date) / 1000);
@@ -97,7 +362,6 @@ class Utils {
         return this.formatDate(dateString);
     }
 
-    // Debounce function
     debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -110,33 +374,47 @@ class Utils {
         };
     }
 
-    // Validate email
-    validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
+    showToast(title, message, type = 'info') {
+        console.log(`📢 Toast: ${type} - ${title}: ${message}`);
+        
+        const toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) return;
 
-    // Validate phone (Kenyan)
-    validatePhone(phone) {
-        const re = /^(\+?254|0)?[17]\d{8}$/;
-        return re.test(phone.replace(/\s/g, ''));
-    }
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icon = type === 'success' ? 'check_circle' : 
+                    type === 'error' ? 'error' : 'info';
+        
+        toast.innerHTML = `
+            <span class="material-icons toast-icon">${icon}</span>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close">
+                <span class="material-icons">close</span>
+            </button>
+        `;
 
-    // Generate random ID
-    generateId() {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    }
+        toastContainer.appendChild(toast);
 
-    // Get user initials
-    getUserInitials(name) {
-        return name.split(' ').map(n => n[0]).join('').toUpperCase();
-    }
+        // Show toast with animation
+        setTimeout(() => toast.classList.add('show'), 100);
 
-    // Calculate average rating
-    calculateAverageRating(reviews) {
-        if (!reviews || reviews.length === 0) return 0;
-        const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-        return (sum / reviews.length).toFixed(1);
+        // Close button
+        toast.querySelector('.toast-close').addEventListener('click', () => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        });
+
+        // Auto remove after delay
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 5000);
     }
 
     // Kenyan counties
@@ -153,7 +431,6 @@ class Utils {
         ];
     }
 
-    // Product categories
     getCategories() {
         return {
             'vegetables': 'Vegetables',
@@ -166,193 +443,57 @@ class Utils {
         };
     }
 
-    // Units
-    getUnits() {
-        return ['kg', 'g', 'piece', 'bunch', 'crate', 'bag', 'liter'];
-    }
-
-    // Check if user is logged in
+    // Auth state checks
     isLoggedIn() {
         return !!this.token && !!this.currentUser;
     }
 
-    // Get user role
     getUserRole() {
         return this.currentUser?.role;
     }
 
-    // Check if user is farmer
     isFarmer() {
         return this.getUserRole() === 'farmer';
     }
 
-    // Check if user is wholesaler
     isWholesaler() {
         return this.getUserRole() === 'wholesaler';
     }
 
-    // Check if user is retailer
     isRetailer() {
         return this.getUserRole() === 'retailer';
     }
 
-    // Logout user
-    logout() {
-        this.token = null;
-        this.currentUser = null;
-        localStorage.removeItem('token');
-        this.showToast('Success', 'Logged out successfully', 'success');
-        this.navigateToPage('home');
-        this.updateUI();
-    }
-
-    // Navigate to page
-    navigateToPage(page) {
-        // Hide all pages
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        
-        // Show target page
-        const targetPage = document.getElementById(`${page}Page`);
-        if (targetPage) {
-            targetPage.classList.add('active');
-        }
-
-        // Update navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('data-page') === page) {
-                link.classList.add('active');
-            }
-        });
-
-        // Update URL hash
-        window.location.hash = page;
-    }
-
-    // Update UI based on auth state
-    updateUI() {
-        const navUser = document.getElementById('navUser');
-        const addProductBtn = document.getElementById('addProductBtn');
-        const authPage = document.getElementById('authPage');
-
-        if (this.isLoggedIn()) {
-            navUser.style.display = 'block';
-            if (this.isFarmer()) {
-                addProductBtn.style.display = 'block';
-            }
-            authPage.style.display = 'none';
-            
-            // Update user info
-            const userInfo = document.getElementById('userInfo');
-            if (userInfo) {
-                userInfo.innerHTML = `
-                    <div class="user-avatar">${this.getUserInitials(this.currentUser.name)}</div>
-                    <div class="user-details">
-                        <div class="user-name">${this.currentUser.name}</div>
-                        <div class="user-role">${this.currentUser.role}</div>
-                    </div>
-                `;
-            }
-        } else {
-            navUser.style.display = 'none';
-            addProductBtn.style.display = 'none';
-        }
-    }
-
-    // Load user data
-    async loadUserData() {
-        if (!this.token) return;
-
+    // Stats update for home page
+    async updateStats() {
         try {
-            const userData = await this.apiCall('/auth/me');
-            this.currentUser = userData;
-            this.updateUI();
+            // These would come from API in real implementation
+            const stats = {
+                farmers: '1,250+',
+                products: '3,450+',
+                orders: '2,100+',
+                counties: '47'
+            };
+            
+            Object.keys(stats).forEach(stat => {
+                const element = document.getElementById(`${stat}Count`);
+                if (element) {
+                    element.textContent = stats[stat];
+                }
+            });
         } catch (error) {
-            console.error('Failed to load user data:', error);
-            this.logout();
+            console.error('Failed to update stats:', error);
         }
     }
 
-    // Initialize app
-    async init() {
-        await this.loadUserData();
-        this.setupEventListeners();
-        
-        // Handle hash navigation
-        const hash = window.location.hash.substring(1) || 'home';
-        this.navigateToPage(hash);
-    }
-
-    // Setup event listeners
-    setupEventListeners() {
-        // Navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.getAttribute('data-page');
-                this.navigateToPage(page);
-            });
-        });
-
-        // Logout
-        document.getElementById('logoutBtn')?.addEventListener('click', () => {
-            this.logout();
-        });
-
-        // Auth tabs
-        document.querySelectorAll('.auth-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                this.switchAuthTab(tabName);
-            });
-        });
-
-        // Role-specific fields
-        document.getElementById('registerRole')?.addEventListener('change', (e) => {
-            this.toggleRoleFields(e.target.value);
-        });
-    }
-
-    // Switch auth tab
-    switchAuthTab(tabName) {
-        // Update tabs
-        document.querySelectorAll('.auth-tab').forEach(tab => {
-            tab.classList.toggle('active', tab.getAttribute('data-tab') === tabName);
-        });
-
-        // Update forms
-        document.querySelectorAll('.auth-form').forEach(form => {
-            form.classList.toggle('active', form.id === `${tabName}Form`);
-        });
-
-        // Update titles
-        const authTitle = document.getElementById('authTitle');
-        const authSubtitle = document.getElementById('authSubtitle');
-        
-        if (tabName === 'login') {
-            authTitle.textContent = 'Welcome Back';
-            authSubtitle.textContent = 'Sign in to your account';
-        } else {
-            authTitle.textContent = 'Create Account';
-            authSubtitle.textContent = 'Join Ukulima Biashara today';
-        }
-    }
-
-    // Toggle role-specific fields
-    toggleRoleFields(role) {
-        // Hide all role fields
-        document.querySelectorAll('.role-fields').forEach(field => {
-            field.style.display = 'none';
-        });
-
-        // Show relevant fields
-        if (role === 'farmer') {
-            document.getElementById('farmerFields').style.display = 'block';
-        } else if (role === 'wholesaler' || role === 'retailer') {
-            document.getElementById('businessFields').style.display = 'block';
-        }
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
     }
 }
 
 // Initialize utils
 const utils = new Utils();
+
+// Make utils available globally for debugging
+window.utils = utils;
+window.authManager = authManager;
