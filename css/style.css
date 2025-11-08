@@ -1063,3 +1063,23 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.5);
 }
+/* Add to css/style.css */
+.product-image:empty::before {
+    content: "🌱";
+    font-size: 3rem;
+    color: var(--text-light);
+}
+
+.user-avatar:empty::before {
+    content: "👤";
+    font-size: 1.5rem;
+}
+
+.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-alt);
+    color: var(--text-light);
+    font-size: 3rem;
+}
