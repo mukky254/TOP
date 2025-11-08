@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ukulima Biashara - Connect Farmers & Buyers</title>
+    <meta name="description" content="Agricultural marketplace connecting farmers, wholesalers, and retailers in Kenya">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/icons.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2E7D32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <span class="icon-plant"></span>
+                <h1>Ukulima Biashara</h1>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Loading your agricultural marketplace...</p>
+        </div>
+    </div>
+
+    <!-- Voice Assistant -->
+    <div id="voiceAssistant" class="voice-assistant">
+        <button id="voiceBtn" class="voice-btn">
+            <span class="material-icons">mic</span>
+        </button>
+        <div class="voice-feedback" id="voiceFeedback"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="icon-plant"></span>
+                <span class="brand-text">Ukulima Biashara</span>
+            </div>
+            
+            <div class="nav-search" id="navSearch">
+                <input type="text" id="searchInput" placeholder="Search products, farmers, locations...">
+                <button class="search-btn" id="searchBtn">
+                    <span class="material-icons">search</span>
+                </button>
+                <button class="voice-search-btn" id="voiceSearchBtn">
+                    <span class="material-icons">keyboard_voice</span>
+                </button>
+            </div>
+
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active" data-page="home">
+                    <span class="material-icons">home</span>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="#products" class="nav-link" data-page="products">
+                    <span class="material-icons">store</span>
+                    <span class="nav-text">Products</span>
+                </a>
+                <a href="#farmers" class="nav-link" data-page="farmers">
+                    <span class="material-icons">agriculture</span>
+                    <span class="nav-text">Farmers</span>
+                </a>
+                <a href="#messages" class="nav-link" data-page="messages">
+                    <span class="material-icons">chat</span>
+                    <span class="nav-text">Messages</span>
+                    <span class="notification-badge" id="messageBadge">0</span>
+                </a>
+                <a href="#orders" class="nav-link" data-page="orders">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="nav-text">Orders</span>
+                    <span class="notification-badge" id="orderBadge">0</span>
+                </a>
+                <div class="nav-user" id="navUser">
+                    <button class="user-btn" id="userBtn">
+                        <span class="material-icons">person</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-info" id="userInfo">
+                            <div class="user-avatar"></div>
+                            <div class="user-details">
+                                <div class="user-name">Guest</div>
+                                <div class="user-role">Please login</div>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="#dashboard" class="dropdown-item" data-page="dashboard">
+                                <span class="material-icons">dashboard</span>
+                                Dashboard
+                            </a>
+                            <a href="#profile" class="dropdown-item" data-page="profile">
+                                <span class="material-icons">account_circle</span>
+                                Profile
+                            </a>
+                            <a href="#settings" class="dropdown-item" data-page="settings">
+                                <span class="material-icons">settings</span>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" id="logoutBtn">
+                                <span class="material-icons">logout</span>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Home Page -->
+        <section id="homePage" class="page active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Connect Farmers & Buyers in Kenya</h1>
+                    <p class="hero-subtitle">Buy fresh produce directly from farmers. Sell your products to verified buyers. Grow your agricultural business.</p>
+                    
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" id="getStartedBtn">
+                            <span class="material-icons">rocket_launch</span>
+                            Get Started
+                        </button>
+                        <button class="btn btn-outline btn-large" id="learnMoreBtn">
+                            <span class="material-icons">play_circle</span>
+                            Watch Demo
+                        </button>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="farmersCount">500+</div>
+                            <div class="stat-label">Farmers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="productsCount">1,200+</div>
+                            <div class="stat-label">Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="ordersCount">800+</div>
+                            <div class="stat-label">Orders</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="floating-cards">
+                        <div class="floating-card farmer-card">
+                            <span class="material-icons">agriculture</span>
+                            <span>Farmers</span>
+                        </div>
+                        <div class="floating-card product-card">
+                            <span class="material-icons">shopping_basket</span>
+                            <span>Products</span>
+                        </div>
+                        <div class="floating-card delivery-card">
+                            <span class="material-icons">local_shipping</span>
+                            <span>Delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <section class="features-section">
+                <div class="container">
+                    <h2 class="section-title">Why Choose Ukulima Biashara?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <span class="material-icons">monetization_on</span>
+                            </div>
+                            <h3>Better Prices</h3>
+                            <p>Get fair prices for your produce without middlemen. Direct farmer-to-buyer transactions.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <span class="material-icons">verified</span>
+                            </div>
+                            <h3>Verified Users</h3>
+                            <p>All farmers and buyers are verified. Safe and secure transactions guaranteed.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <span class="material-icons">phone_android</span>
+                            </div>
+                            <h3>Mobile First</h3>
+                            <p>Works on all devices. Simple interface for both literate and illiterate users.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <span class="material-icons">headset_mic</span>
+                            </div>
+                            <h3>Voice Support</h3>
+                            <p>Use voice commands to navigate, search, and place orders in Swahili or English.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="how-it-works">
+                <div class="container">
+                    <h2 class="section-title">How It Works</h2>
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Sign Up</h3>
+                                <p>Create your account as Farmer, Wholesaler, or Retailer</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>List or Browse</h3>
+                                <p>Farmers list products, buyers browse and search</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Connect & Order</h3>
+                                <p>Message sellers, place orders, and arrange delivery</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3>Grow Business</h3>
+                                <p>Build your reputation and grow your agricultural business</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products -->
+            <section class="featured-products">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">Fresh Products Available</h2>
+                        <a href="#products" class="view-all">View All</a>
+                    </div>
+                    <div class="products-grid" id="featuredProducts">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Auth Pages -->
+        <section id="authPage" class="page">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h2 id="authTitle">Welcome Back</h2>
+                        <p id="authSubtitle">Sign in to your account</p>
+                    </div>
+
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">Login</button>
+                        <button class="auth-tab" data-tab="register">Register</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="auth-form active">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+                        
+                        <div class="auth-divider">
+                            <span>Or continue with</span>
+                        </div>
+                        
+                        <div class="social-auth">
+                            <button type="button" class="btn btn-outline btn-full">
+                                <span class="material-icons">phone</span>
+                                Phone Login
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="registerName">Full Name</label>
+                            <input type="text" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Phone Number</label>
+                            <input type="tel" id="registerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerRole">I am a</label>
+                            <select id="registerRole" required>
+                                <option value="">Select Role</option>
+                                <option value="farmer">Farmer</option>
+                                <option value="wholesaler">Wholesaler</option>
+                                <option value="retailer">Retailer</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Farmer Specific Fields -->
+                        <div class="role-fields" id="farmerFields">
+                            <div class="form-group">
+                                <label for="farmDetails">Farm Details</label>
+                                <textarea id="farmDetails" placeholder="Describe your farm and products..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Business Specific Fields -->
+                        <div class="role-fields" id="businessFields">
+                            <div class="form-group">
+                                <label for="businessName">Business Name</label>
+                                <input type="text" id="businessName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerCounty">County</label>
+                            <select id="registerCounty" required>
+                                <option value="">Select County</option>
+                                <!-- Counties will be populated -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerSubCounty">Sub-County</label>
+                            <input type="text" id="registerSubCounty" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <input type="password" id="registerPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerConfirmPassword">Confirm Password</label>
+                            <input type="password" id="registerConfirmPassword" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Page -->
+        <section id="productsPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Browse Products</h1>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" id="addProductBtn" style="display: none;">
+                            <span class="material-icons">add</span>
+                            Add Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="grains">Grains</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="poultry">Poultry</option>
+                            <option value="livestock">Livestock</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="countyFilter">
+                            <option value="">All Counties</option>
+                            <!-- Counties will be populated -->
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="sortFilter">
+                            <option value="newest">Newest First</option>
+                            <option value="price_low">Price: Low to High</option>
+                            <option value="price_high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline" id="advancedFiltersBtn">
+                        <span class="material-icons">filter_list</span>
+                        More Filters
+                    </button>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="advanced-filters" id="advancedFilters" style="display: none;">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Price Range</label>
+                            <div class="price-range">
+                                <input type="number" id="minPrice" placeholder="Min">
+                                <span>to</span>
+                                <input type="number" id="maxPrice" placeholder="Max">
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label>
+                                <input type="checkbox" id="organicFilter">
+                                Organic Only
+                            </label>
+                        </div>
+                        <div class="filter-group">
+                            <label>
+                                <input type="checkbox" id="freshFilter">
+                                Fresh Only
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="products-container">
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Products will be loaded here -->
+                    </div>
+                    <div class="loading-more" id="productsLoading">
+                        <div class="spinner"></div>
+                        <span>Loading more products...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add more pages for Dashboard, Orders, Messages, etc. -->
+        <!-- Due to length, I'll show the structure and continue with CSS and JS -->
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Ukulima Biashara</h3>
+                    <p>Connecting farmers and buyers across Kenya</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">WhatsApp</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>For Farmers</h4>
+                    <a href="#">Sell Products</a>
+                    <a href="#">Market Prices</a>
+                    <a href="#">Farming Tips</a>
+                </div>
+                <div class="footer-section">
+                    <h4>For Buyers</h4>
+                    <a href="#">Browse Products</a>
+                    <a href="#">Find Farmers</a>
+                    <a href="#">Delivery Info</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Safety Tips</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ukulima Biashara. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Product Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="productModalBody">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/messages.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
