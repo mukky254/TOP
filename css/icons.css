@@ -1,0 +1,482 @@
+/* Custom icons for Ukulima Biashara */
+
+/* Material Icons sizing */
+.material-icons {
+    font-size: inherit;
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Custom icon styles */
+.icon-plant {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232E7D32'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* Loading spinner icon */
+.icon-spinner {
+    animation: rotate 1s linear infinite;
+}
+
+/* Status icons */
+.icon-status-pending {
+    color: #FF9800;
+}
+
+.icon-status-confirmed {
+    color: #2196F3;
+}
+
+.icon-status-delivered {
+    color: #4CAF50;
+}
+
+.icon-status-cancelled {
+    color: #F44336;
+}
+
+/* Rating stars */
+.star-rating {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.star-rating .material-icons {
+    font-size: 16px;
+    color: #FFD700;
+}
+
+.star-rating .material-icons.outline {
+    color: #E0E0E0;
+}
+
+/* Social media icons */
+.icon-facebook {
+    color: #1877F2;
+}
+
+.icon-twitter {
+    color: #1DA1F2;
+}
+
+.icon-whatsapp {
+    color: #25D366;
+}
+
+/* Feature icons */
+.feature-icon .material-icons {
+    font-size: 2rem;
+}
+
+/* Notification icons */
+.notification-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Payment method icons */
+.icon-mpesa {
+    color: #00A650;
+}
+
+.icon-cash {
+    color: #4CAF50;
+}
+
+.icon-bank {
+    color: #2196F3;
+}
+
+/* Delivery method icons */
+.icon-pickup {
+    color: #FF9800;
+}
+
+.icon-delivery {
+    color: #2196F3;
+}
+
+/* Product category icons */
+.icon-vegetables {
+    color: #4CAF50;
+}
+
+.icon-fruits {
+    color: #FF9800;
+}
+
+.icon-grains {
+    color: #8D6E63;
+}
+
+.icon-dairy {
+    color: #FFFDE7;
+}
+
+.icon-poultry {
+    color: #FF5722;
+}
+
+.icon-livestock {
+    color: #795548;
+}
+
+/* Weather icons */
+.icon-weather-sunny {
+    color: #FFC107;
+}
+
+.icon-weather-rainy {
+    color: #2196F3;
+}
+
+.icon-weather-cloudy {
+    color: #9E9E9E;
+}
+
+/* Map location icons */
+.icon-location-marker {
+    color: #F44336;
+}
+
+.icon-location-farm {
+    color: #4CAF50;
+}
+
+.icon-location-market {
+    color: #FF9800;
+}
+
+/* Time and date icons */
+.icon-time {
+    color: #2196F3;
+}
+
+.icon-calendar {
+    color: #FF5722;
+}
+
+/* File type icons */
+.icon-pdf {
+    color: #F44336;
+}
+
+.icon-image {
+    color: #4CAF50;
+}
+
+.icon-document {
+    color: #2196F3;
+}
+
+/* Action icons */
+.icon-edit {
+    color: #2196F3;
+}
+
+.icon-delete {
+    color: #F44336;
+}
+
+.icon-share {
+    color: #4CAF50;
+}
+
+.icon-download {
+    color: #FF9800;
+}
+
+/* Navigation arrows */
+.icon-arrow-left,
+.icon-arrow-right {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.icon-arrow-left:hover,
+.icon-arrow-right:hover {
+    color: var(--primary-color);
+}
+
+/* Toggle icons */
+.icon-toggle-on {
+    color: #4CAF50;
+}
+
+.icon-toggle-off {
+    color: #9E9E9E;
+}
+
+/* Filter and sort icons */
+.icon-filter {
+    color: #666666;
+}
+
+.icon-sort {
+    color: #666666;
+}
+
+/* Search and clear icons */
+.icon-search {
+    color: #666666;
+}
+
+.icon-clear {
+    color: #666666;
+    cursor: pointer;
+}
+
+.icon-clear:hover {
+    color: #F44336;
+}
+
+/* Voice recording icons */
+.icon-voice {
+    color: #2196F3;
+}
+
+.icon-voice-recording {
+    color: #F44336;
+    animation: pulse 1s infinite;
+}
+
+/* Chat and message icons */
+.icon-chat {
+    color: #2196F3;
+}
+
+.icon-message-unread {
+    color: #F44336;
+}
+
+.icon-message-read {
+    color: #9E9E9E;
+}
+
+/* User role icons */
+.icon-farmer {
+    color: #4CAF50;
+}
+
+.icon-wholesaler {
+    color: #FF9800;
+}
+
+.icon-retailer {
+    color: #2196F3;
+}
+
+.icon-admin {
+    color: #9C27B0;
+}
+
+/* Payment status icons */
+.icon-payment-pending {
+    color: #FF9800;
+}
+
+.icon-payment-paid {
+    color: #4CAF50;
+}
+
+.icon-payment-failed {
+    color: #F44336;
+}
+
+.icon-payment-refunded {
+    color: #9E9E9E;
+}
+
+/* Quality and certification icons */
+.icon-organic {
+    color: #4CAF50;
+}
+
+.icon-fresh {
+    color: #4CAF50;
+}
+
+.icon-certified {
+    color: #2196F3;
+}
+
+.icon-verified {
+    color: #4CAF50;
+}
+
+/* Seasonal icons */
+.icon-season-spring {
+    color: #4CAF50;
+}
+
+.icon-season-summer {
+    color: #FF9800;
+}
+
+.icon-season-autumn {
+    color: #FF5722;
+}
+
+.icon-season-winter {
+    color: #2196F3;
+}
+
+/* Size and quantity icons */
+.icon-small {
+    font-size: 0.8em;
+}
+
+.icon-medium {
+    font-size: 1em;
+}
+
+.icon-large {
+    font-size: 1.2em;
+}
+
+.icon-extra-large {
+    font-size: 1.5em;
+}
+
+/* Animated icons */
+.icon-loading {
+    animation: rotate 1s linear infinite;
+}
+
+.icon-bounce {
+    animation: bounce 1s infinite;
+}
+
+.icon-pulse {
+    animation: pulse 1s infinite;
+}
+
+.icon-shake {
+    animation: shake 0.5s ease;
+}
+
+/* Interactive icon states */
+.icon-button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+.icon-button.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.icon-button.primary:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Icon with badge */
+.icon-with-badge {
+    position: relative;
+    display: inline-block;
+}
+
+.icon-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #F44336;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Social share icons */
+.social-share-icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-share-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.social-share-icon:hover {
+    transform: scale(1.1);
+}
+
+.social-share-icon.facebook {
+    background: #1877F2;
+}
+
+.social-share-icon.twitter {
+    background: #1DA1F2;
+}
+
+.social-share-icon.whatsapp {
+    background: #25D366;
+}
+
+.social-share-icon.share {
+    background: #666666;
+}
+
+/* Platform-specific icon adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .material-icons {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .material-icons {
+        filter: contrast(2);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .material-icons {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .icon-loading,
+    .icon-bounce,
+    .icon-pulse,
+    .icon-shake {
+        animation: none;
+    }
+}
